@@ -11,7 +11,9 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - uses: actions/setup-node@v6
-      - run: corepack enable
+        with:
+          node-version: 24
+      - run: corepack enable pnpm
       - run: pnpm install --frozen-lockfile
       - run: |
           set -e
@@ -25,7 +27,9 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - uses: actions/setup-node@v6
-      - run: corepack enable
+        with:
+          node-version: 24
+      - run: corepack enable pnpm
       - run: pnpm install --frozen-lockfile
       - run: |
           set -e
@@ -40,7 +44,10 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - uses: actions/setup-node@v6
-      - run: corepack enable
+        with:
+          node-version: 24
+          cache: 'pnpm'
+      - run: corepack enable pnpm
       - run: pnpm install --frozen-lockfile
       - run: |
           set -e
