@@ -9,6 +9,7 @@
 		"build": "tsdown",
 		"prepublish": "pnpm run build",
 		"lint": "biome check .",
+		"test": "vitest",
 		"lint:fix": "biome check . --write"
 	},
 	"keywords": [],
