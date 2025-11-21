@@ -13,7 +13,9 @@ jobs:
       - uses: actions/setup-node@v6
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test
+      - run: |
+          set -e
+          pnpm lint
   test:
     runs-on: ubuntu-latest
     steps:
@@ -25,7 +27,9 @@ jobs:
       - uses: actions/setup-node@v6
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test
+      - run: |
+          set -e
+          pnpm test
   build:
     needs: [test, lint]
     runs-on: ubuntu-latest
@@ -38,5 +42,7 @@ jobs:
       - uses: actions/setup-node@v6
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build
+      - run: |
+          set -e
+          pnpm build
 
