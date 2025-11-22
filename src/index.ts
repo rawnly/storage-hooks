@@ -10,12 +10,13 @@ function subscribeToStorage(
 	callback: (v: StorageValue) => void,
 ) {
 	function handleStorageEvent(event: StorageEvent) {
+		console.log(event.key, event.newValue);
 		if (event.storageArea !== storage || event.key !== key) return;
 		callback(event.newValue);
 	}
 
-	window.addEventListener("storage", handleStorageEvent, false);
-	return () => window.removeEventListener("storage", handleStorageEvent, false);
+	window.addEventListener("storage", handleStorageEvent);
+	return () => window.removeEventListener("storage", handleStorageEvent);
 }
 
 interface Options<T> {
@@ -43,14 +44,27 @@ export function useStorage<T>(
 	const value = useSyncExternalStore(
 		(callback) => subscribeToStorage(key, options.storage, callback),
 		() => parseValue(options.storage.getItem(key)),
-		() => defaultValue,
+		() => null,
 	);
 
 	const setValue = useCallback(
-		<T>(newValue: T) => {
-			localStorage.setItem(key, JSON.stringify(newValue));
+		(newValue: React.SetStateAction<T>) => {
+			const v = newValue instanceof Function ? newValue(value) : newValue;
+			options.storage.setItem(key, JSON.stringify(v));
+
+			// MDN: The event is not fired on the window that made the change
+			// https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event
+			window.dispatchEvent(
+				new StorageEvent("storage", {
+					key,
+					oldValue: value ? JSON.stringify(value) : null,
+					newValue: v ? JSON.stringify(v) : null,
+					storageArea: options.storage,
+					url: window.location.href,
+				}),
+			);
 		},
-		[key],
+		[key, value, options.storage],
 	);
 
 	return [value, setValue] as const;
