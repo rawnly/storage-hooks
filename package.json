@@ -1,6 +1,6 @@
 {
 	"name": "@storage-hooks/react",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"private": false,
 	"description": "A collection of React hooks for managing various types of storage in web applications.",
 	"main": "./dist/index.cjs",
